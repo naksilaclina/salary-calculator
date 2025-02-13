@@ -78,10 +78,34 @@ export function hesaplaMaas({
     // 3. Normal mesai süresinin hesaplanması
     const normalMesai = toplamCalisma - minCalisma - tatilMesai
     
+    // Minimum çalışma süresinden az çalışma durumu
     if (normalMesai < 0) {
-        throw new Error("Toplam çalışma süresi minimum çalışma süresinden az olamaz!")
+        // Eksik çalışma saati hesaplama (tatil mesai hariç)
+        const eksikCalisma = Math.abs(normalMesai)
+        
+        // Normal saatlik ücret üzerinden kesinti
+        const kesinti = eksikCalisma * saatlikUcret
+        
+        // 4. Mesai ücretlerinin hesaplanması (sadece tatil mesai)
+        const normalMesaiUcret = 0 // Eksik çalışmada normal mesai ücreti olmaz
+        const tatilMesaiUcret = tatilMesai * (saatlikUcret * TATIL_MESAI_CARPANI)
+        const toplamMesaiUcret = tatilMesaiUcret
+        
+        // 5. Net maaş hesaplama (kesinti dahil)
+        const netMaas = tabanMaas + toplamMesaiUcret - kesinti
+
+        return {
+            saatlikUcret,
+            normalMesai: -eksikCalisma, // Eksi değer olarak eksik çalışmayı göster
+            tatilMesai,
+            normalMesaiUcret,
+            tatilMesaiUcret,
+            toplamMesaiUcret,
+            netMaas
+        }
     }
 
+    // Normal durum (fazla mesai varsa)
     // 4. Mesai ücretlerinin hesaplanması
     const normalMesaiUcret = normalMesai * (saatlikUcret * NORMAL_MESAI_CARPANI)
     const tatilMesaiUcret = tatilMesai * (saatlikUcret * TATIL_MESAI_CARPANI)

@@ -404,11 +404,18 @@ export default function MaasHesaplamaForm() {
                                                         </p>
                                                         {formData.toplamCalisma && (
                                                             <>
-                                                                {Number(formData.toplamCalisma) > minCalisma && (
+                                                                {Number(formData.toplamCalisma) > minCalisma ? (
                                                                     <p className="text-xs mt-1">
                                                                         <span className="font-medium">{Number(formData.toplamCalisma) - minCalisma} saat</span> fazla mesai yaptınız
                                                                         <br />
                                                                         Normal mesai ücreti: <span className="font-medium">x1.5</span>
+                                                                        {formData.tatilVarMi && ' | Resmi tatil ücreti: x2.0'}
+                                                                    </p>
+                                                                ) : Number(formData.toplamCalisma) < minCalisma && (
+                                                                    <p className="text-xs mt-1 text-amber-600 dark:text-amber-400">
+                                                                        <span className="font-medium">{minCalisma - Number(formData.toplamCalisma)} saat</span> eksik çalışmanız var
+                                                                        <br />
+                                                                        Eksik çalışma kesintisi: <span className="font-medium">x1.0</span> (normal saatlik ücret)
                                                                         {formData.tatilVarMi && ' | Resmi tatil ücreti: x2.0'}
                                                                     </p>
                                                                 )}
@@ -597,29 +604,75 @@ export default function MaasHesaplamaForm() {
                                 <div className="grid grid-cols-2 gap-6 h-full">
                                     {/* Sol Kolon - Mesai Detayları */}
                                     <div className="flex flex-col gap-4">
-                                        <div className="flex-1 p-4 bg-white dark:bg-slate-700/30 rounded-xl">
-                                            <p className="text-sm text-slate-500 dark:text-slate-400">Normal Mesai</p>
-                                            <div className="flex items-baseline gap-1">
-                                                <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.normalMesai)}</p>
-                                                <p className="text-sm text-slate-500 dark:text-slate-400">saat</p>
-                                            </div>
-                                            <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.normalMesaiUcret)}</p>
-                                        </div>
-                                        <div className="flex-1 p-4 bg-white dark:bg-slate-700/30 rounded-xl">
-                                            <p className="text-sm text-slate-500 dark:text-slate-400">Resmi Tatil Mesai</p>
-                                            <div className="flex items-baseline gap-1">
-                                                <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.tatilMesai)}</p>
-                                                <p className="text-sm text-slate-500 dark:text-slate-400">saat</p>
-                                            </div>
-                                            <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret)}</p>
-                                        </div>
+                                        {sonuclar.normalMesai >= 0 ? (
+                                            // Fazla mesai durumu (mevcut görünüm)
+                                            <>
+                                                <div className="flex-1 p-4 bg-white dark:bg-slate-700/30 rounded-xl">
+                                                    <p className="text-sm text-slate-500 dark:text-slate-400">Normal Mesai</p>
+                                                    <div className="flex items-baseline gap-1">
+                                                        <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.normalMesai)}</p>
+                                                        <p className="text-sm text-slate-500 dark:text-slate-400">saat</p>
+                                                    </div>
+                                                    <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.normalMesaiUcret)}</p>
+                                                </div>
+                                                <div className="flex-1 p-4 bg-white dark:bg-slate-700/30 rounded-xl">
+                                                    <p className="text-sm text-slate-500 dark:text-slate-400">Resmi Tatil Mesai</p>
+                                                    <div className="flex items-baseline gap-1">
+                                                        <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.tatilMesai)}</p>
+                                                        <p className="text-sm text-slate-500 dark:text-slate-400">saat</p>
+                                                    </div>
+                                                    <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret)}</p>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            // Eksik çalışma durumu
+                                            <>
+                                                <div className="flex-1 p-4 bg-white dark:bg-slate-700/30 rounded-xl border border-amber-200 dark:border-amber-800">
+                                                    <p className="text-sm text-amber-600 dark:text-amber-400">Eksik Çalışma</p>
+                                                    <div className="flex items-baseline gap-1">
+                                                        <p className="text-xl font-semibold text-amber-600 dark:text-amber-400">{formatSaat(Math.abs(sonuclar.normalMesai))}</p>
+                                                        <p className="text-sm text-amber-600/70 dark:text-amber-400/70">saat</p>
+                                                    </div>
+                                                    <p className="text-sm text-amber-600/90 dark:text-amber-400/90 mt-1">
+                                                        {formatPara(Math.abs(sonuclar.normalMesai) * sonuclar.saatlikUcret)} kesinti
+                                                    </p>
+                                                </div>
+                                                {sonuclar.tatilMesai > 0 && (
+                                                    <div className="flex-1 p-4 bg-white dark:bg-slate-700/30 rounded-xl">
+                                                        <p className="text-sm text-slate-500 dark:text-slate-400">Resmi Tatil Mesai</p>
+                                                        <div className="flex items-baseline gap-1">
+                                                            <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.tatilMesai)}</p>
+                                                            <p className="text-sm text-slate-500 dark:text-slate-400">saat</p>
+                                                        </div>
+                                                        <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret)}</p>
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
                                     </div>
 
                                     {/* Sağ Kolon - Toplam Tutarlar */}
                                     <div className="flex flex-col gap-4">
                                         <div className="flex-1 p-4 bg-white dark:bg-slate-700/30 rounded-xl">
-                                            <p className="text-sm text-slate-500 dark:text-slate-400">Toplam Mesai Ücreti</p>
-                                            <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatPara(sonuclar.toplamMesaiUcret)}</p>
+                                            {sonuclar.normalMesai >= 0 ? (
+                                                <>
+                                                    <p className="text-sm text-slate-500 dark:text-slate-400">Toplam Mesai Ücreti</p>
+                                                    <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatPara(sonuclar.toplamMesaiUcret)}</p>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <p className="text-sm text-amber-600 dark:text-amber-400">Toplam Kesinti</p>
+                                                    <p className="text-xl font-semibold text-amber-600 dark:text-amber-400">
+                                                        {formatPara(Math.abs(sonuclar.normalMesai) * sonuclar.saatlikUcret)}
+                                                    </p>
+                                                    {sonuclar.tatilMesai > 0 && (
+                                                        <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-600">
+                                                            <p className="text-sm text-slate-500 dark:text-slate-400">Resmi Tatil Mesai Ücreti</p>
+                                                            <p className="text-lg font-medium text-slate-900 dark:text-white">{formatPara(sonuclar.tatilMesaiUcret)}</p>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
                                         </div>
                                         <div className="flex-[2] p-6 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl flex flex-col">
                                             <div>
@@ -630,7 +683,9 @@ export default function MaasHesaplamaForm() {
                                             </div>
                                             <div className="mt-auto pt-6 border-t border-indigo-100 dark:border-indigo-800">
                                                 <p className="text-sm text-indigo-600/70 dark:text-indigo-400/70">
-                                                    Taban Maaş + Mesai Ücretleri
+                                                    {sonuclar.normalMesai >= 0 
+                                                        ? 'Taban Maaş + Mesai Ücretleri'
+                                                        : 'Taban Maaş - Kesinti' + (sonuclar.tatilMesai > 0 ? ' + Resmi Tatil Mesai' : '')}
                                                 </p>
                                             </div>
                                         </div>
