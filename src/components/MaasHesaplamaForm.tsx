@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react'
 import { useTheme } from './providers/theme-provider'
 import { hesaplaMaas, formatPara, formatSaat, hesaplaMinimumCalisma } from '@/lib/utils/calculations'
-import { usePDF } from 'react-to-pdf'
 
 interface FormState {
     tabanMaas: string
@@ -43,15 +42,6 @@ export default function MaasHesaplamaForm() {
     const [savedCalculations, setSavedCalculations] = useState<{name: string, data: FormState}[]>([])
     const [showSaveModal, setShowSaveModal] = useState(false)
     const [saveName, setSaveName] = useState('')
-
-    const { toPDF, targetRef } = usePDF({
-        filename: `maas-hesaplama-${formData.ay}-${formData.yil}.pdf`,
-        page: { 
-            margin: 20,
-            format: 'A4'
-        },
-        method: 'save'
-    })
 
     const [showHistoryModal, setShowHistoryModal] = useState(false)
     const [calculationHistory, setCalculationHistory] = useState<{
@@ -551,7 +541,7 @@ export default function MaasHesaplamaForm() {
             {showModal && sonuclar && (
                 <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm">
                     <div className="flex min-h-full items-center justify-center p-4">
-                        <div ref={targetRef} className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-2xl transition-all">
+                        <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-2xl transition-all">
                             {/* Modal Header */}
                             <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
                                 <div className="flex justify-between items-center">
@@ -564,16 +554,6 @@ export default function MaasHesaplamaForm() {
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => toPDF()}
-                                            className="inline-flex justify-center items-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all duration-200"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                            </svg>
-                                            PDF İndir
-                                        </button>
                                         <button
                                             type="button"
                                             onClick={() => {
