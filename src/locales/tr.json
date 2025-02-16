@@ -11,6 +11,11 @@
       "label": "Dönem",
       "selectMonth": "Ay Seçin"
     },
+    "dailyWorkHours": {
+      "label": "Günlük Çalışma Saati",
+      "tooltip": "Günlük normal çalışma saati. Varsayılan değer 9 saattir.",
+      "placeholder": "Örn: 9"
+    },
     "totalWorkHours": {
       "label": "Toplam Çalışma Saati",
       "tooltip": "Ay içinde toplam çalışılan saat. Normal mesai ücreti x1.5, resmi tatil mesai ücreti x2.0 olarak hesaplanır."

@@ -11,6 +11,11 @@
       "label": "Period",
       "selectMonth": "Select Month"
     },
+    "dailyWorkHours": {
+      "label": "Daily Working Hours",
+      "tooltip": "Daily normal working hours. Default value is 9 hours.",
+      "placeholder": "Ex: 9"
+    },
     "totalWorkHours": {
       "label": "Total Working Hours",
       "tooltip": "Total hours worked in the month. Normal overtime rate is x1.5, holiday overtime rate is x2.0."

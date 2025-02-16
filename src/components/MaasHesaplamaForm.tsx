@@ -3,10 +3,8 @@
 import React, { useState, useEffect } from 'react'
 import { useTheme } from './providers/theme-provider'
 import { useLanguage } from './providers/language-provider'
-import { useCurrency } from './providers/currency-provider'
 import { hesaplaMaas, formatPara, formatSaat, hesaplaMinimumCalisma } from '@/lib/utils/calculations'
 import LanguageToggle from './LanguageToggle'
-import CurrencyToggle from './CurrencyToggle'
 
 interface FormState {
     tabanMaas: string
@@ -15,6 +13,7 @@ interface FormState {
     toplamCalisma: string
     tatilVarMi: boolean
     tatilMesai: string
+    gunlukCalismaSaati: string
 }
 
 interface SonucState {
@@ -30,14 +29,14 @@ interface SonucState {
 export default function MaasHesaplamaForm() {
     const { theme, toggleTheme } = useTheme()
     const { translations } = useLanguage()
-    const { currency } = useCurrency()
     const [formData, setFormData] = useState<FormState>({
         tabanMaas: '',
         ay: '',
         yil: new Date().getFullYear().toString(),
         toplamCalisma: '',
         tatilVarMi: false,
-        tatilMesai: ''
+        tatilMesai: '',
+        gunlukCalismaSaati: '9'
     })
     const [sonuclar, setSonuclar] = useState<SonucState | null>(null)
     const [showModal, setShowModal] = useState(false)
@@ -119,7 +118,8 @@ export default function MaasHesaplamaForm() {
                 yil: Number(formData.yil),
                 toplamCalisma: Number(formData.toplamCalisma),
                 tatilVarMi: formData.tatilVarMi,
-                tatilMesai: Number(formData.tatilMesai)
+                tatilMesai: Number(formData.tatilMesai),
+                gunlukCalismaSaati: Number(formData.gunlukCalismaSaati)
             })
 
             // Hesaplama geçmişine ekle
@@ -192,7 +192,6 @@ export default function MaasHesaplamaForm() {
                             </div>
                             <div className="flex items-center gap-2">
                                 <LanguageToggle />
-                                <CurrencyToggle />
                                 <div className="relative">
                                     <button
                                         type="button"
@@ -226,7 +225,8 @@ export default function MaasHesaplamaForm() {
                                             yil: new Date().getFullYear().toString(),
                                             toplamCalisma: '',
                                             tatilVarMi: false,
-                                            tatilMesai: ''
+                                            tatilMesai: '',
+                                            gunlukCalismaSaati: '9'
                                         })
                                         setSonuclar(null)
                                         setShowModal(false)
@@ -275,34 +275,80 @@ export default function MaasHesaplamaForm() {
                     </div>
 
                     <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                        {/* Taban Maaş */}
+                        {/* Taban Maaş ve Günlük Çalışma Saati */}
                         <div className="animate-slide-in" style={{ ['--animation-order' as any]: 1 }}>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                {translations.form.baseSalary.label}
-                                <div className="inline-block ml-1 group relative">
-                                    <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <div className="hidden group-hover:block absolute z-50 w-64 p-2 mt-1 text-sm text-white bg-slate-800 rounded-lg shadow-lg">
-                                        {translations.form.baseSalary.tooltip}
+                            <div className="flex items-center gap-4">
+                                <div className="flex-1">
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                        {translations.form.baseSalary.label}
+                                        <div className="inline-block ml-1 group relative">
+                                            <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <div className="hidden group-hover:block absolute z-50 w-64 p-2 mt-1 text-sm text-white bg-slate-800 rounded-lg shadow-lg">
+                                                {translations.form.baseSalary.tooltip}
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span className="text-slate-500 dark:text-slate-400">₺</span>
+                                        </div>
+                                        <input
+                                            type="number"
+                                            name="tabanMaas"
+                                            value={formData.tabanMaas}
+                                            onChange={handleInputChange}
+                                            min="0"
+                                            step="0.01"
+                                            placeholder={translations.form.baseSalary.placeholder}
+                                            className="block w-full pl-8 pr-4 py-2.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300"
+                                            required
+                                        />
                                     </div>
                                 </div>
-                            </label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span className="text-slate-500 dark:text-slate-400">₺</span>
+                                <div className="w-48">
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                        {translations.form.dailyWorkHours.label}
+                                        <div className="inline-block ml-1 group relative">
+                                            <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <div className="hidden group-hover:block absolute z-50 w-64 p-2 mt-1 text-sm text-white bg-slate-800 rounded-lg shadow-lg">
+                                                {translations.form.dailyWorkHours.tooltip}
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <svg
+                                                className="h-5 w-5 text-slate-500 dark:text-slate-400"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <input
+                                            type="number"
+                                            name="gunlukCalismaSaati"
+                                            value={formData.gunlukCalismaSaati}
+                                            onChange={handleInputChange}
+                                            min="1"
+                                            max="24"
+                                            step="0.5"
+                                            placeholder={translations.form.dailyWorkHours.placeholder}
+                                            className="block w-full pl-10 pr-4 py-2.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300"
+                                            required
+                                        />
+                                    </div>
                                 </div>
-                                <input
-                                    type="number"
-                                    name="tabanMaas"
-                                    value={formData.tabanMaas}
-                                    onChange={handleInputChange}
-                                    min="0"
-                                    step="0.01"
-                                    placeholder={translations.form.baseSalary.placeholder}
-                                    className="block w-full pl-8 pr-4 py-2.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300"
-                                    required
-                                />
                             </div>
                         </div>
 
@@ -346,7 +392,7 @@ export default function MaasHesaplamaForm() {
                         </div>
 
                         {/* Toplam Çalışma Saati */}
-                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 3 }}>
+                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 5 }}>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                                 {translations.form.totalWorkHours.label}
                                 <div className="inline-block ml-1 group relative">
@@ -394,7 +440,7 @@ export default function MaasHesaplamaForm() {
                                         </svg>
                                         <div>
                                             {(() => {
-                                                const minCalisma = hesaplaMinimumCalisma(Number(formData.yil), Number(formData.ay))
+                                                const minCalisma = hesaplaMinimumCalisma(Number(formData.yil), Number(formData.ay), Number(formData.gunlukCalismaSaati))
                                                 return (
                                                     <>
                                                         <p>
@@ -409,7 +455,7 @@ export default function MaasHesaplamaForm() {
                                                                         Normal mesai ücreti: <span className="font-medium">x1.5</span>
                                                                         {formData.tatilVarMi && ' | Resmi tatil ücreti: x2.0'}
                                                                     </p>
-                                                                ) : Number(formData.toplamCalisma) < minCalisma && (
+                                                                ) : (
                                                                     <p className="text-xs mt-1 text-amber-600 dark:text-amber-400">
                                                                         <span className="font-medium">{formatSaat(minCalisma - Number(formData.toplamCalisma))} saat</span> eksik çalışmanız var
                                                                         <br />
@@ -429,7 +475,7 @@ export default function MaasHesaplamaForm() {
                         </div>
 
                         {/* Resmi Tatil */}
-                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 4 }}>
+                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 6 }}>
                             <div className="flex items-center gap-4">
                                 <div className="flex-1">
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -478,7 +524,7 @@ export default function MaasHesaplamaForm() {
 
                         {/* Tatil Mesai */}
                         {formData.tatilVarMi && (
-                            <div className="animate-slide-in-fast" style={{ ['--animation-order' as any]: 5 }}>
+                            <div className="animate-slide-in-fast" style={{ ['--animation-order' as any]: 7 }}>
                                 <div className="max-w-full">
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                                         {translations.form.holidayWork.hours.label}
@@ -523,7 +569,7 @@ export default function MaasHesaplamaForm() {
                         )}
 
                         {/* Hesapla ve Kaydet Butonları */}
-                        <div className="grid grid-cols-2 gap-4 pt-4 animate-slide-in" style={{ ['--animation-order' as any]: 6 }}>
+                        <div className="grid grid-cols-2 gap-4 pt-4 animate-slide-in" style={{ ['--animation-order' as any]: 8 }}>
                             <button
                                 type="submit"
                                 className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
@@ -586,7 +632,7 @@ export default function MaasHesaplamaForm() {
                                 <div className="grid grid-cols-3 gap-4 p-4 mb-6 bg-slate-50 dark:bg-slate-700/30 rounded-xl">
                                     <div>
                                         <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.baseSalary}</p>
-                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">{formatPara(Number(formData.tabanMaas), currency)}</p>
+                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">{formatPara(Number(formData.tabanMaas))}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.totalWork}</p>
@@ -594,7 +640,7 @@ export default function MaasHesaplamaForm() {
                                     </div>
                                     <div>
                                         <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.hourlyRate}</p>
-                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">{formatPara(sonuclar.saatlikUcret, currency)}</p>
+                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">{formatPara(sonuclar.saatlikUcret)}</p>
                                     </div>
                                 </div>
 
@@ -611,7 +657,7 @@ export default function MaasHesaplamaForm() {
                                                         <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.normalMesai)}</p>
                                                         <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.hours}</p>
                                                     </div>
-                                                    <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.normalMesaiUcret, currency)}</p>
+                                                    <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.normalMesaiUcret)}</p>
                                                 </div>
                                                 <div className="flex-1 p-4 bg-white dark:bg-slate-700/30 rounded-xl">
                                                     <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.holidayOvertime}</p>
@@ -619,7 +665,7 @@ export default function MaasHesaplamaForm() {
                                                         <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.tatilMesai)}</p>
                                                         <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.hours}</p>
                                                     </div>
-                                                    <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret, currency)}</p>
+                                                    <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret)}</p>
                                                 </div>
                                             </>
                                         ) : (
@@ -632,7 +678,7 @@ export default function MaasHesaplamaForm() {
                                                         <p className="text-sm text-amber-600/70 dark:text-amber-400/70">{translations.results.hours}</p>
                                                     </div>
                                                     <p className="text-sm text-amber-600/90 dark:text-amber-400/90 mt-1">
-                                                        {formatPara(Math.abs(sonuclar.normalMesai) * sonuclar.saatlikUcret, currency)}
+                                                        {formatPara(Math.abs(sonuclar.normalMesai) * sonuclar.saatlikUcret)}
                                                     </p>
                                                 </div>
                                                 {sonuclar.tatilMesai > 0 && (
@@ -642,7 +688,7 @@ export default function MaasHesaplamaForm() {
                                                             <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.tatilMesai)}</p>
                                                             <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.hours}</p>
                                                         </div>
-                                                        <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret, currency)}</p>
+                                                        <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret)}</p>
                                                     </div>
                                                 )}
                                             </>
@@ -655,18 +701,18 @@ export default function MaasHesaplamaForm() {
                                             {sonuclar.normalMesai >= 0 ? (
                                                 <>
                                                     <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.totalOvertimePay}</p>
-                                                    <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatPara(sonuclar.toplamMesaiUcret, currency)}</p>
+                                                    <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatPara(sonuclar.toplamMesaiUcret)}</p>
                                                 </>
                                             ) : (
                                                 <>
                                                     <p className="text-sm text-amber-600 dark:text-amber-400">{translations.results.totalDeduction}</p>
                                                     <p className="text-xl font-semibold text-amber-600 dark:text-amber-400">
-                                                        {formatPara(Math.abs(sonuclar.normalMesai) * sonuclar.saatlikUcret, currency)}
+                                                        {formatPara(Math.abs(sonuclar.normalMesai) * sonuclar.saatlikUcret)}
                                                     </p>
                                                     {sonuclar.tatilMesai > 0 && (
                                                         <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-600">
                                                             <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.holidayOvertimePay}</p>
-                                                            <p className="text-lg font-medium text-slate-900 dark:text-white">{formatPara(sonuclar.tatilMesaiUcret, currency)}</p>
+                                                            <p className="text-lg font-medium text-slate-900 dark:text-white">{formatPara(sonuclar.tatilMesaiUcret)}</p>
                                                         </div>
                                                     )}
                                                 </>
@@ -676,7 +722,7 @@ export default function MaasHesaplamaForm() {
                                             <div>
                                                 <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">{translations.results.netSalary}</p>
                                                 <p className="text-4xl font-bold text-indigo-600 dark:text-indigo-400 mt-3">
-                                                    {formatPara(sonuclar.netMaas, currency)}
+                                                    {formatPara(sonuclar.netMaas)}
                                                 </p>
                                             </div>
                                             <div className="mt-auto pt-6 border-t border-indigo-100 dark:border-indigo-800">
@@ -732,7 +778,7 @@ export default function MaasHesaplamaForm() {
                                                             {item.date}
                                                         </p>
                                                         <p className="text-lg font-semibold text-slate-900 dark:text-white mt-1">
-                                                            {formatPara(item.sonuclar.netMaas, currency)}
+                                                            {formatPara(item.sonuclar.netMaas)}
                                                         </p>
                                                     </div>
                                                     <div className="flex items-center gap-2">
@@ -775,7 +821,7 @@ export default function MaasHesaplamaForm() {
                                                     <div>
                                                         <p className="text-slate-500 dark:text-slate-400">{translations.results.baseSalary}</p>
                                                         <p className="font-medium text-slate-900 dark:text-white">
-                                                            {formatPara(Number(item.formData.tabanMaas), currency)}
+                                                            {formatPara(Number(item.formData.tabanMaas))}
                                                         </p>
                                                     </div>
                                                     <div>
@@ -844,7 +890,7 @@ export default function MaasHesaplamaForm() {
                                                         {item.date}
                                                     </p>
                                                     <p className="text-lg font-semibold text-slate-900 dark:text-white mt-1">
-                                                        {formatPara(item.sonuclar.netMaas, currency)}
+                                                        {formatPara(item.sonuclar.netMaas)}
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-2">
@@ -887,7 +933,7 @@ export default function MaasHesaplamaForm() {
                                                 <div>
                                                     <p className="text-slate-500 dark:text-slate-400">{translations.results.baseSalary}</p>
                                                     <p className="font-medium text-slate-900 dark:text-white">
-                                                        {formatPara(Number(item.formData.tabanMaas), currency)}
+                                                        {formatPara(Number(item.formData.tabanMaas))}
                                                     </p>
                                                 </div>
                                                 <div>
