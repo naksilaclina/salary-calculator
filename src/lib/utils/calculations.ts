@@ -126,13 +126,21 @@ export function hesaplaMaas({
 }
 
 // Para formatı
-export function formatPara(deger: number): string {
+export function formatPara(deger: number, currency: 'TRY' | 'USD' | 'EUR' = 'TRY'): string {
+    const exchangeRates = {
+        TRY: 1,
+        USD: 0.031, // 1 TRY = 0.031 USD (örnek kur)
+        EUR: 0.029  // 1 TRY = 0.029 EUR (örnek kur)
+    }
+
+    const convertedValue = deger * exchangeRates[currency]
+
     return new Intl.NumberFormat('tr-TR', {
         style: 'currency',
-        currency: 'TRY',
+        currency: currency,
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
-    }).format(deger)
+    }).format(convertedValue)
 }
 
 // Saat formatı

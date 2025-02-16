@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import { useTheme } from './providers/theme-provider'
 import { useLanguage } from './providers/language-provider'
+import { useCurrency } from './providers/currency-provider'
 import { hesaplaMaas, formatPara, formatSaat, hesaplaMinimumCalisma } from '@/lib/utils/calculations'
 import LanguageToggle from './LanguageToggle'
+import CurrencyToggle from './CurrencyToggle'
 
 interface FormState {
     tabanMaas: string
@@ -28,6 +30,7 @@ interface SonucState {
 export default function MaasHesaplamaForm() {
     const { theme, toggleTheme } = useTheme()
     const { translations } = useLanguage()
+    const { currency } = useCurrency()
     const [formData, setFormData] = useState<FormState>({
         tabanMaas: '',
         ay: '',
@@ -189,6 +192,7 @@ export default function MaasHesaplamaForm() {
                             </div>
                             <div className="flex items-center gap-2">
                                 <LanguageToggle />
+                                <CurrencyToggle />
                                 <div className="relative">
                                     <button
                                         type="button"
@@ -582,7 +586,7 @@ export default function MaasHesaplamaForm() {
                                 <div className="grid grid-cols-3 gap-4 p-4 mb-6 bg-slate-50 dark:bg-slate-700/30 rounded-xl">
                                     <div>
                                         <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.baseSalary}</p>
-                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">{formatPara(Number(formData.tabanMaas))}</p>
+                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">{formatPara(Number(formData.tabanMaas), currency)}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.totalWork}</p>
@@ -590,7 +594,7 @@ export default function MaasHesaplamaForm() {
                                     </div>
                                     <div>
                                         <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.hourlyRate}</p>
-                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">{formatPara(sonuclar.saatlikUcret)}</p>
+                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">{formatPara(sonuclar.saatlikUcret, currency)}</p>
                                     </div>
                                 </div>
 
@@ -607,7 +611,7 @@ export default function MaasHesaplamaForm() {
                                                         <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.normalMesai)}</p>
                                                         <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.hours}</p>
                                                     </div>
-                                                    <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.normalMesaiUcret)}</p>
+                                                    <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.normalMesaiUcret, currency)}</p>
                                                 </div>
                                                 <div className="flex-1 p-4 bg-white dark:bg-slate-700/30 rounded-xl">
                                                     <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.holidayOvertime}</p>
@@ -615,7 +619,7 @@ export default function MaasHesaplamaForm() {
                                                         <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.tatilMesai)}</p>
                                                         <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.hours}</p>
                                                     </div>
-                                                    <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret)}</p>
+                                                    <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret, currency)}</p>
                                                 </div>
                                             </>
                                         ) : (
@@ -628,7 +632,7 @@ export default function MaasHesaplamaForm() {
                                                         <p className="text-sm text-amber-600/70 dark:text-amber-400/70">{translations.results.hours}</p>
                                                     </div>
                                                     <p className="text-sm text-amber-600/90 dark:text-amber-400/90 mt-1">
-                                                        {formatPara(Math.abs(sonuclar.normalMesai) * sonuclar.saatlikUcret)}
+                                                        {formatPara(Math.abs(sonuclar.normalMesai) * sonuclar.saatlikUcret, currency)}
                                                     </p>
                                                 </div>
                                                 {sonuclar.tatilMesai > 0 && (
@@ -638,7 +642,7 @@ export default function MaasHesaplamaForm() {
                                                             <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatSaat(sonuclar.tatilMesai)}</p>
                                                             <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.hours}</p>
                                                         </div>
-                                                        <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret)}</p>
+                                                        <p className="text-sm text-indigo-600 dark:text-indigo-400 mt-1">{formatPara(sonuclar.tatilMesaiUcret, currency)}</p>
                                                     </div>
                                                 )}
                                             </>
@@ -651,18 +655,18 @@ export default function MaasHesaplamaForm() {
                                             {sonuclar.normalMesai >= 0 ? (
                                                 <>
                                                     <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.totalOvertimePay}</p>
-                                                    <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatPara(sonuclar.toplamMesaiUcret)}</p>
+                                                    <p className="text-xl font-semibold text-slate-900 dark:text-white">{formatPara(sonuclar.toplamMesaiUcret, currency)}</p>
                                                 </>
                                             ) : (
                                                 <>
                                                     <p className="text-sm text-amber-600 dark:text-amber-400">{translations.results.totalDeduction}</p>
                                                     <p className="text-xl font-semibold text-amber-600 dark:text-amber-400">
-                                                        {formatPara(Math.abs(sonuclar.normalMesai) * sonuclar.saatlikUcret)}
+                                                        {formatPara(Math.abs(sonuclar.normalMesai) * sonuclar.saatlikUcret, currency)}
                                                     </p>
                                                     {sonuclar.tatilMesai > 0 && (
                                                         <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-600">
                                                             <p className="text-sm text-slate-500 dark:text-slate-400">{translations.results.holidayOvertimePay}</p>
-                                                            <p className="text-lg font-medium text-slate-900 dark:text-white">{formatPara(sonuclar.tatilMesaiUcret)}</p>
+                                                            <p className="text-lg font-medium text-slate-900 dark:text-white">{formatPara(sonuclar.tatilMesaiUcret, currency)}</p>
                                                         </div>
                                                     )}
                                                 </>
@@ -672,7 +676,7 @@ export default function MaasHesaplamaForm() {
                                             <div>
                                                 <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">{translations.results.netSalary}</p>
                                                 <p className="text-4xl font-bold text-indigo-600 dark:text-indigo-400 mt-3">
-                                                    {formatPara(sonuclar.netMaas)}
+                                                    {formatPara(sonuclar.netMaas, currency)}
                                                 </p>
                                             </div>
                                             <div className="mt-auto pt-6 border-t border-indigo-100 dark:border-indigo-800">
@@ -728,7 +732,7 @@ export default function MaasHesaplamaForm() {
                                                             {item.date}
                                                         </p>
                                                         <p className="text-lg font-semibold text-slate-900 dark:text-white mt-1">
-                                                            {formatPara(item.sonuclar.netMaas)}
+                                                            {formatPara(item.sonuclar.netMaas, currency)}
                                                         </p>
                                                     </div>
                                                     <div className="flex items-center gap-2">
@@ -771,7 +775,7 @@ export default function MaasHesaplamaForm() {
                                                     <div>
                                                         <p className="text-slate-500 dark:text-slate-400">{translations.results.baseSalary}</p>
                                                         <p className="font-medium text-slate-900 dark:text-white">
-                                                            {formatPara(Number(item.formData.tabanMaas))}
+                                                            {formatPara(Number(item.formData.tabanMaas), currency)}
                                                         </p>
                                                     </div>
                                                     <div>
@@ -840,7 +844,7 @@ export default function MaasHesaplamaForm() {
                                                         {item.date}
                                                     </p>
                                                     <p className="text-lg font-semibold text-slate-900 dark:text-white mt-1">
-                                                        {formatPara(item.sonuclar.netMaas)}
+                                                        {formatPara(item.sonuclar.netMaas, currency)}
                                                     </p>
                                                 </div>
                                                 <div className="flex items-center gap-2">
@@ -883,7 +887,7 @@ export default function MaasHesaplamaForm() {
                                                 <div>
                                                     <p className="text-slate-500 dark:text-slate-400">{translations.results.baseSalary}</p>
                                                     <p className="font-medium text-slate-900 dark:text-white">
-                                                        {formatPara(Number(item.formData.tabanMaas))}
+                                                        {formatPara(Number(item.formData.tabanMaas), currency)}
                                                     </p>
                                                 </div>
                                                 <div>
