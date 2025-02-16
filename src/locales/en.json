@@ -1,0 +1,69 @@
+{
+  "title": "Salary Calculator",
+  "subtitle": "Quick and easy overtime calculation tool",
+  "form": {
+    "baseSalary": {
+      "label": "Base Salary",
+      "tooltip": "Employee's monthly gross salary. Cannot be lower than minimum wage.",
+      "placeholder": "Ex: 17000"
+    },
+    "period": {
+      "label": "Period",
+      "selectMonth": "Select Month"
+    },
+    "totalWorkHours": {
+      "label": "Total Working Hours",
+      "tooltip": "Total hours worked in the month. Normal overtime rate is x1.5, holiday overtime rate is x2.0."
+    },
+    "holidayWork": {
+      "label": "Holiday Work",
+      "tooltip": "Work performed on official holidays is calculated at x2.0 rate.",
+      "hasHoliday": "Holiday work included (x2.0 rate)",
+      "noHoliday": "No holiday work",
+      "hours": {
+        "label": "Holiday Overtime Hours",
+        "tooltip": "Total hours worked on official holidays. Calculated separately at x2.0 rate from normal overtime."
+      }
+    }
+  },
+  "buttons": {
+    "calculate": "Calculate",
+    "save": "Save Calculation"
+  },
+  "results": {
+    "title": "Calculation Results",
+    "baseSalary": "Base Salary",
+    "totalWork": "Total Work",
+    "hourlyRate": "Hourly Rate",
+    "normalOvertime": "Normal Overtime",
+    "holidayOvertime": "Holiday Overtime",
+    "hours": "hours",
+    "totalOvertimePay": "Total Overtime Pay",
+    "totalDeduction": "Total Deduction",
+    "holidayOvertimePay": "Holiday Overtime Pay",
+    "netSalary": "Net Salary",
+    "calculation": {
+      "withOvertime": "Base Salary + Overtime Pay",
+      "withDeduction": "Base Salary - Deduction",
+      "withHoliday": "Base Salary - Deduction + Holiday Overtime"
+    }
+  },
+  "history": {
+    "empty": "No calculation history yet.",
+    "period": "Period"
+  },
+  "months": {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
+  }
+} 

@@ -1,0 +1,70 @@
+{
+  "title": "Maaş Hesaplama",
+  "subtitle": "Hızlı ve kolay mesai hesaplama aracı",
+  "form": {
+    "baseSalary": {
+      "label": "Taban Maaş",
+      "tooltip": "Çalışanın aylık brüt maaşı. Asgari ücretten düşük olamaz.",
+      "placeholder": "Örn: 17000"
+    },
+    "period": {
+      "label": "Dönem",
+      "selectMonth": "Ay Seçin"
+    },
+    "totalWorkHours": {
+      "label": "Toplam Çalışma Saati",
+      "tooltip": "Ay içinde toplam çalışılan saat. Normal mesai ücreti x1.5, resmi tatil mesai ücreti x2.0 olarak hesaplanır."
+    },
+    "holidayWork": {
+      "label": "Resmi Tatil Çalışması",
+      "tooltip": "Resmi tatil günlerinde yapılan çalışmalar x2.0 ücret ile hesaplanır.",
+      "hasHoliday": "Resmi tatilde çalışma var (x2.0 ücret)",
+      "noHoliday": "Resmi tatilde çalışma yok",
+      "hours": {
+        "label": "Resmi Tatil Mesai Saati",
+        "tooltip": "Resmi tatil günlerinde çalışılan toplam saat. Normal mesaiden ayrı olarak x2.0 ücret ile hesaplanır."
+      }
+    }
+  },
+  "buttons": {
+    "calculate": "Hesapla",
+    "save": "Hesaplamayı Kaydet"
+  },
+  "results": {
+    "title": "Hesaplama Sonuçları",
+    "baseSalary": "Taban Maaş",
+    "totalWork": "Toplam Çalışma",
+    "hourlyRate": "Saatlik Ücret",
+    "normalOvertime": "Normal Mesai",
+    "holidayOvertime": "Resmi Tatil Mesai",
+    "hours": "saat",
+    "totalOvertimePay": "Toplam Mesai Ücreti",
+    "totalDeduction": "Toplam Kesinti",
+    "holidayOvertimePay": "Resmi Tatil Mesai Ücreti",
+    "netSalary": "Net Maaş",
+    "calculation": {
+      "withOvertime": "Taban Maaş + Mesai Ücretleri",
+      "withDeduction": "Taban Maaş - Kesinti",
+      "withHoliday": "Taban Maaş - Kesinti + Resmi Tatil Mesai"
+    }
+  },
+  "history": {
+    "title": "Hesaplama Geçmişi",
+    "empty": "Henüz hesaplama geçmişi bulunmuyor.",
+    "period": "Dönem"
+  },
+  "months": {
+    "1": "Ocak",
+    "2": "Şubat",
+    "3": "Mart",
+    "4": "Nisan",
+    "5": "Mayıs",
+    "6": "Haziran",
+    "7": "Temmuz",
+    "8": "Ağustos",
+    "9": "Eylül",
+    "10": "Ekim",
+    "11": "Kasım",
+    "12": "Aralık"
+  }
+} 

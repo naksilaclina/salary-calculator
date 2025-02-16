@@ -137,5 +137,5 @@ export function formatPara(deger: number): string {
 
 // Saat formatı
 export function formatSaat(saat: number): string {
-    return `${saat.toFixed(1)}`
+    return `${saat.toFixed(2)}`
 } 
