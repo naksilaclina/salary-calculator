@@ -49,6 +49,7 @@
     }
   },
   "history": {
+    "title": "Calculation History",
     "empty": "No calculation history yet.",
     "period": "Period"
   },
