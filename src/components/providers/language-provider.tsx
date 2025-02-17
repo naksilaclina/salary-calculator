@@ -42,6 +42,7 @@ interface TranslationType {
     buttons: {
         calculate: string
         save: string
+        reset: string
     }
     results: {
         title: string
