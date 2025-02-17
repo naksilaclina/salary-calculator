@@ -12,15 +12,14 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setTheme] = useState<Theme>('dark')
-
-    useEffect(() => {
-        // Kayıtlı temayı kontrol et
-        const savedTheme = localStorage.getItem('theme') as Theme | null
-        
-        // Kayıtlı tema varsa onu, yoksa dark tema kullan
-        setTheme(savedTheme || 'dark')
-    }, [])
+    const [theme, setTheme] = useState<Theme>(() => {
+        // Başlangıç değeri olarak window nesnesini kontrol et
+        if (typeof window !== 'undefined') {
+            const savedTheme = localStorage.getItem('theme') as Theme | null
+            return savedTheme || 'dark'
+        }
+        return 'dark'
+    })
 
     useEffect(() => {
         // Tema değiştiğinde HTML elementine class ekle/çıkar
