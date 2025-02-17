@@ -33,7 +33,8 @@
   },
   "buttons": {
     "calculate": "Hesapla",
-    "save": "Hesaplamayı Kaydet"
+    "save": "Hesaplamayı Kaydet",
+    "reset": "Sıfırla"
   },
   "results": {
     "title": "Hesaplama Sonuçları",

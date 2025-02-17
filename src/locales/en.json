@@ -33,7 +33,8 @@
   },
   "buttons": {
     "calculate": "Calculate",
-    "save": "Save Calculation"
+    "save": "Save Calculation",
+    "reset": "Reset"
   },
   "results": {
     "title": "Calculation Results",

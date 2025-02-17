@@ -22,10 +22,6 @@
     .glass-morphism {
         @apply bg-white/95 dark:bg-slate-900/95 backdrop-blur-[2px] border border-white/20 dark:border-slate-700/30;
     }
-
-    .hover-scale {
-        @apply hover:scale-[1.02] transition-transform duration-300;
-    }
 }
 
 @layer utilities {
