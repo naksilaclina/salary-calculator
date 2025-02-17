@@ -13,7 +13,6 @@ interface FormState {
     toplamCalisma: string
     tatilVarMi: boolean
     tatilMesai: string
-    gunlukCalismaSaati: string
 }
 
 interface SonucState {
@@ -35,8 +34,7 @@ export default function MaasHesaplamaForm() {
         yil: new Date().getFullYear().toString(),
         toplamCalisma: '',
         tatilVarMi: false,
-        tatilMesai: '',
-        gunlukCalismaSaati: '9'
+        tatilMesai: ''
     })
     const [sonuclar, setSonuclar] = useState<SonucState | null>(null)
     const [showModal, setShowModal] = useState(false)
@@ -118,8 +116,7 @@ export default function MaasHesaplamaForm() {
                 yil: Number(formData.yil),
                 toplamCalisma: Number(formData.toplamCalisma),
                 tatilVarMi: formData.tatilVarMi,
-                tatilMesai: Number(formData.tatilMesai),
-                gunlukCalismaSaati: Number(formData.gunlukCalismaSaati)
+                tatilMesai: Number(formData.tatilMesai)
             })
 
             // Hesaplama geçmişine ekle
@@ -191,19 +188,6 @@ export default function MaasHesaplamaForm() {
                                 </p>
                             </div>
                             <div className="flex items-center gap-2">
-                                <LanguageToggle />
-                                <div className="relative">
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowSaveModal(true)}
-                                        className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                                        title="Kayıtlı Hesaplamalar"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 md:w-6 md:h-6 text-slate-600 dark:text-slate-400">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                                        </svg>
-                                    </button>
-                                </div>
                                 <div className="relative">
                                     <button
                                         type="button"
@@ -225,8 +209,7 @@ export default function MaasHesaplamaForm() {
                                             yil: new Date().getFullYear().toString(),
                                             toplamCalisma: '',
                                             tatilVarMi: false,
-                                            tatilMesai: '',
-                                            gunlukCalismaSaati: '9'
+                                            tatilMesai: ''
                                         })
                                         setSonuclar(null)
                                         setShowModal(false)
@@ -270,85 +253,40 @@ export default function MaasHesaplamaForm() {
                                         </svg>
                                     )}
                                 </button>
+                                <LanguageToggle />
                             </div>
                         </div>
                     </div>
 
                     <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                        {/* Taban Maaş ve Günlük Çalışma Saati */}
+                        {/* Taban Maaş */}
                         <div className="animate-slide-in" style={{ ['--animation-order' as any]: 1 }}>
-                            <div className="flex items-center gap-4">
-                                <div className="flex-1">
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                        {translations.form.baseSalary.label}
-                                        <div className="inline-block ml-1 group relative">
-                                            <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            <div className="hidden group-hover:block absolute z-50 w-64 p-2 mt-1 text-sm text-white bg-slate-800 rounded-lg shadow-lg">
-                                                {translations.form.baseSalary.tooltip}
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <span className="text-slate-500 dark:text-slate-400">₺</span>
-                                        </div>
-                                        <input
-                                            type="number"
-                                            name="tabanMaas"
-                                            value={formData.tabanMaas}
-                                            onChange={handleInputChange}
-                                            min="0"
-                                            step="0.01"
-                                            placeholder={translations.form.baseSalary.placeholder}
-                                            className="block w-full pl-8 pr-4 py-2.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300"
-                                            required
-                                        />
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                {translations.form.baseSalary.label}
+                                <div className="inline-block ml-1 group relative">
+                                    <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <div className="hidden group-hover:block absolute z-50 w-64 p-2 mt-1 text-sm text-white bg-slate-800 rounded-lg shadow-lg">
+                                        {translations.form.baseSalary.tooltip}
                                     </div>
                                 </div>
-                                <div className="w-48">
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                        {translations.form.dailyWorkHours.label}
-                                        <div className="inline-block ml-1 group relative">
-                                            <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            <div className="hidden group-hover:block absolute z-50 w-64 p-2 mt-1 text-sm text-white bg-slate-800 rounded-lg shadow-lg">
-                                                {translations.form.dailyWorkHours.tooltip}
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg
-                                                className="h-5 w-5 text-slate-500 dark:text-slate-400"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <input
-                                            type="number"
-                                            name="gunlukCalismaSaati"
-                                            value={formData.gunlukCalismaSaati}
-                                            onChange={handleInputChange}
-                                            min="1"
-                                            max="24"
-                                            step="0.5"
-                                            placeholder={translations.form.dailyWorkHours.placeholder}
-                                            className="block w-full pl-10 pr-4 py-2.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300"
-                                            required
-                                        />
-                                    </div>
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span className="text-slate-500 dark:text-slate-400">₺</span>
                                 </div>
+                                <input
+                                    type="number"
+                                    name="tabanMaas"
+                                    value={formData.tabanMaas}
+                                    onChange={handleInputChange}
+                                    min="0"
+                                    step="0.01"
+                                    placeholder={translations.form.baseSalary.placeholder}
+                                    className="block w-full pl-8 pr-4 py-2.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300"
+                                    required
+                                />
                             </div>
                         </div>
 
@@ -392,7 +330,7 @@ export default function MaasHesaplamaForm() {
                         </div>
 
                         {/* Toplam Çalışma Saati */}
-                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 5 }}>
+                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 3 }}>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                                 {translations.form.totalWorkHours.label}
                                 <div className="inline-block ml-1 group relative">
@@ -440,7 +378,7 @@ export default function MaasHesaplamaForm() {
                                         </svg>
                                         <div>
                                             {(() => {
-                                                const minCalisma = hesaplaMinimumCalisma(Number(formData.yil), Number(formData.ay), Number(formData.gunlukCalismaSaati))
+                                                const minCalisma = hesaplaMinimumCalisma(Number(formData.yil), Number(formData.ay))
                                                 return (
                                                     <>
                                                         <p>
@@ -455,7 +393,7 @@ export default function MaasHesaplamaForm() {
                                                                         Normal mesai ücreti: <span className="font-medium">x1.5</span>
                                                                         {formData.tatilVarMi && ' | Resmi tatil ücreti: x2.0'}
                                                                     </p>
-                                                                ) : (
+                                                                ) : Number(formData.toplamCalisma) < minCalisma && (
                                                                     <p className="text-xs mt-1 text-amber-600 dark:text-amber-400">
                                                                         <span className="font-medium">{formatSaat(minCalisma - Number(formData.toplamCalisma))} saat</span> eksik çalışmanız var
                                                                         <br />
@@ -475,7 +413,7 @@ export default function MaasHesaplamaForm() {
                         </div>
 
                         {/* Resmi Tatil */}
-                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 6 }}>
+                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 4 }}>
                             <div className="flex items-center gap-4">
                                 <div className="flex-1">
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -524,7 +462,7 @@ export default function MaasHesaplamaForm() {
 
                         {/* Tatil Mesai */}
                         {formData.tatilVarMi && (
-                            <div className="animate-slide-in-fast" style={{ ['--animation-order' as any]: 7 }}>
+                            <div className="animate-slide-in-fast" style={{ ['--animation-order' as any]: 5 }}>
                                 <div className="max-w-full">
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                                         {translations.form.holidayWork.hours.label}
@@ -569,7 +507,7 @@ export default function MaasHesaplamaForm() {
                         )}
 
                         {/* Hesapla ve Kaydet Butonları */}
-                        <div className="grid grid-cols-2 gap-4 pt-4 animate-slide-in" style={{ ['--animation-order' as any]: 8 }}>
+                        <div className="grid grid-cols-2 gap-4 pt-4 animate-slide-in" style={{ ['--animation-order' as any]: 6 }}>
                             <button
                                 type="submit"
                                 className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
