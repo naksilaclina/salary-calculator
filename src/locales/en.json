@@ -5,11 +5,16 @@
     "baseSalary": {
       "label": "Base Salary",
       "tooltip": "Employee's monthly gross salary. Cannot be lower than minimum wage.",
-      "placeholder": "Ex: 17000"
+      "placeholder": "Ex: 30000"
     },
     "period": {
       "label": "Period",
       "selectMonth": "Select Month"
+    },
+    "dailyWorkHours": {
+      "label": "Daily Working Hours",
+      "tooltip": "Daily normal working hours. Default value is 9 hours.",
+      "placeholder": "Ex: 9"
     },
     "totalWorkHours": {
       "label": "Total Working Hours",

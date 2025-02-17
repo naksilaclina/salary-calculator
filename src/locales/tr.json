@@ -5,11 +5,16 @@
     "baseSalary": {
       "label": "Taban Maaş",
       "tooltip": "Çalışanın aylık brüt maaşı. Asgari ücretten düşük olamaz.",
-      "placeholder": "Örn: 17000"
+      "placeholder": "Örn: 30000"
     },
     "period": {
       "label": "Dönem",
       "selectMonth": "Ay Seçin"
+    },
+    "dailyWorkHours": {
+      "label": "Günlük Çalışma Saati",
+      "tooltip": "Günlük normal çalışma saati. Varsayılan değer 9 saattir.",
+      "placeholder": "Örn: 9"
     },
     "totalWorkHours": {
       "label": "Toplam Çalışma Saati",

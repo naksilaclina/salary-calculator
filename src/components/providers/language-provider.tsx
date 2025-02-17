@@ -19,6 +19,11 @@ interface TranslationType {
             label: string
             selectMonth: string
         }
+        dailyWorkHours: {
+            label: string
+            tooltip: string
+            placeholder: string
+        }
         totalWorkHours: {
             label: string
             tooltip: string

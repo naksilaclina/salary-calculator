@@ -10,6 +10,7 @@ interface HesaplamaParametreleri {
     toplamCalisma: number
     tatilVarMi: boolean
     tatilMesai: number
+    gunlukCalismaSaati?: number // Opsiyonel, varsayılan değer 9
 }
 
 interface HesaplamaSonuclari {
@@ -23,7 +24,7 @@ interface HesaplamaSonuclari {
 }
 
 // Minimum çalışma süresini hesapla
-export function hesaplaMinimumCalisma(yil: number, ay: number): number {
+export function hesaplaMinimumCalisma(yil: number, ay: number, gunlukCalismaSaati: number = 9): number {
     const gunSayisi = new Date(yil, ay, 0).getDate()
     let haftaSonuGunleri = 0
 
@@ -35,7 +36,7 @@ export function hesaplaMinimumCalisma(yil: number, ay: number): number {
     }
 
     const calismaGunu = gunSayisi - haftaSonuGunleri
-    return calismaGunu * 9 // Günlük 9 saat çalışma
+    return calismaGunu * gunlukCalismaSaati
 }
 
 // Ana hesaplama fonksiyonu
@@ -45,7 +46,8 @@ export function hesaplaMaas({
     yil,
     toplamCalisma,
     tatilVarMi,
-    tatilMesai
+    tatilMesai,
+    gunlukCalismaSaati = 9
 }: HesaplamaParametreleri): HesaplamaSonuclari {
     // Validasyonlar
     if (tabanMaas <= 0) throw new Error('Taban maaş 0\'dan büyük olmalıdır')
@@ -73,7 +75,7 @@ export function hesaplaMaas({
     const saatlikUcret = tabanMaas / AYLIK_CALISMA_SAATI
 
     // 2. Minimum çalışma süresinin hesaplanması
-    const minCalisma = hesaplaMinimumCalisma(yil, ay)
+    const minCalisma = hesaplaMinimumCalisma(yil, ay, gunlukCalismaSaati)
 
     // 3. Normal mesai süresinin hesaplanması
     const normalMesai = toplamCalisma - minCalisma - tatilMesai

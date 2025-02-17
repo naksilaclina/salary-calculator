@@ -13,6 +13,7 @@ interface FormState {
     toplamCalisma: string
     tatilVarMi: boolean
     tatilMesai: string
+    gunlukCalismaSaati: string
 }
 
 interface SonucState {
@@ -34,7 +35,8 @@ export default function MaasHesaplamaForm() {
         yil: new Date().getFullYear().toString(),
         toplamCalisma: '',
         tatilVarMi: false,
-        tatilMesai: ''
+        tatilMesai: '',
+        gunlukCalismaSaati: '9'
     })
     const [sonuclar, setSonuclar] = useState<SonucState | null>(null)
     const [showModal, setShowModal] = useState(false)
@@ -116,7 +118,8 @@ export default function MaasHesaplamaForm() {
                 yil: Number(formData.yil),
                 toplamCalisma: Number(formData.toplamCalisma),
                 tatilVarMi: formData.tatilVarMi,
-                tatilMesai: Number(formData.tatilMesai)
+                tatilMesai: Number(formData.tatilMesai),
+                gunlukCalismaSaati: Number(formData.gunlukCalismaSaati)
             })
 
             // Hesaplama geçmişine ekle
@@ -188,45 +191,61 @@ export default function MaasHesaplamaForm() {
                                 </p>
                             </div>
                             <div className="flex items-center gap-2">
+                                <LanguageToggle />
                                 <div className="relative">
                                     <button
                                         type="button"
                                         onClick={() => setShowHistoryModal(true)}
                                         className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                                        title="Hesaplama Geçmişi"
+                                        title="Kayıtlı Hesaplamalar"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 md:w-6 md:h-6 text-slate-600 dark:text-slate-400">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                                         </svg>
                                     </button>
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setFormData({
-                                            tabanMaas: '',
-                                            ay: '',
-                                            yil: new Date().getFullYear().toString(),
-                                            toplamCalisma: '',
-                                            tatilVarMi: false,
-                                            tatilMesai: ''
-                                        })
-                                        setSonuclar(null)
-                                        setShowModal(false)
-                                        setError(null)
-                                    }}
-                                    className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                                    title="Formu Sıfırla"
-                                >
-                                    <svg className="w-5 h-5 md:w-6 md:h-6 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                        />
-                                    </svg>
-                                </button>
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowSaveModal(true)}
+                                        className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                        title="Hesaplamayı Kaydet"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 md:w-6 md:h-6 text-slate-600 dark:text-slate-400">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2zm-1 16H8a1 1 0 01-1-1v-3a1 1 0 011-1h8a1 1 0 011 1v3a1 1 0 01-1 1z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setFormData({
+                                                tabanMaas: '',
+                                                ay: '',
+                                                yil: new Date().getFullYear().toString(),
+                                                toplamCalisma: '',
+                                                tatilVarMi: false,
+                                                tatilMesai: '',
+                                                gunlukCalismaSaati: '9'
+                                            })
+                                            setSonuclar(null)
+                                            setShowModal(false)
+                                            setError(null)
+                                        }}
+                                        className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                        title="Formu Sıfırla"
+                                    >
+                                        <svg className="w-5 h-5 md:w-6 md:h-6 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
                                 <button
                                     type="button"
                                     onClick={toggleTheme}
@@ -253,40 +272,85 @@ export default function MaasHesaplamaForm() {
                                         </svg>
                                     )}
                                 </button>
-                                <LanguageToggle />
                             </div>
                         </div>
                     </div>
 
                     <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                        {/* Taban Maaş */}
+                        {/* Taban Maaş ve Günlük Çalışma Saati */}
                         <div className="animate-slide-in" style={{ ['--animation-order' as any]: 1 }}>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                                {translations.form.baseSalary.label}
-                                <div className="inline-block ml-1 group relative">
-                                    <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <div className="hidden group-hover:block absolute z-50 w-64 p-2 mt-1 text-sm text-white bg-slate-800 rounded-lg shadow-lg">
-                                        {translations.form.baseSalary.tooltip}
+                            <div className="flex items-center gap-2">
+                                <div className="flex-1">
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                        {translations.form.baseSalary.label}
+                                        <div className="inline-block ml-1 group relative">
+                                            <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <div className="hidden group-hover:block absolute z-50 w-64 p-2 mt-1 text-sm text-white bg-slate-800 rounded-lg shadow-lg">
+                                                {translations.form.baseSalary.tooltip}
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span className="text-slate-500 dark:text-slate-400">₺</span>
+                                        </div>
+                                        <input
+                                            type="number"
+                                            name="tabanMaas"
+                                            value={formData.tabanMaas}
+                                            onChange={handleInputChange}
+                                            min="0"
+                                            step="0.01"
+                                            placeholder={translations.form.baseSalary.placeholder}
+                                            className="block w-full pl-8 pr-4 py-2.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300"
+                                            required
+                                        />
                                     </div>
                                 </div>
-                            </label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span className="text-slate-500 dark:text-slate-400">₺</span>
+                                <div className="w-48">
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                        {translations.form.dailyWorkHours.label}
+                                        <div className="inline-block ml-1 group relative">
+                                            <svg className="w-4 h-4 text-slate-500 dark:text-slate-400 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <div className="hidden group-hover:block absolute z-50 w-64 p-2 mt-1 text-sm text-white bg-slate-800 rounded-lg shadow-lg">
+                                                {translations.form.dailyWorkHours.tooltip}
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <svg
+                                                className="h-5 w-5 text-slate-500 dark:text-slate-400"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <input
+                                            type="number"
+                                            name="gunlukCalismaSaati"
+                                            value={formData.gunlukCalismaSaati}
+                                            onChange={handleInputChange}
+                                            min="1"
+                                            max="24"
+                                            step="0.5"
+                                            placeholder={translations.form.dailyWorkHours.placeholder}
+                                            className="block w-full pl-10 pr-4 py-2.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300"
+                                            required
+                                        />
+                                    </div>
                                 </div>
-                                <input
-                                    type="number"
-                                    name="tabanMaas"
-                                    value={formData.tabanMaas}
-                                    onChange={handleInputChange}
-                                    min="0"
-                                    step="0.01"
-                                    placeholder={translations.form.baseSalary.placeholder}
-                                    className="block w-full pl-8 pr-4 py-2.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300"
-                                    required
-                                />
                             </div>
                         </div>
 
@@ -330,7 +394,7 @@ export default function MaasHesaplamaForm() {
                         </div>
 
                         {/* Toplam Çalışma Saati */}
-                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 3 }}>
+                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 5 }}>
                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                                 {translations.form.totalWorkHours.label}
                                 <div className="inline-block ml-1 group relative">
@@ -378,7 +442,7 @@ export default function MaasHesaplamaForm() {
                                         </svg>
                                         <div>
                                             {(() => {
-                                                const minCalisma = hesaplaMinimumCalisma(Number(formData.yil), Number(formData.ay))
+                                                const minCalisma = hesaplaMinimumCalisma(Number(formData.yil), Number(formData.ay), Number(formData.gunlukCalismaSaati))
                                                 return (
                                                     <>
                                                         <p>
@@ -393,7 +457,7 @@ export default function MaasHesaplamaForm() {
                                                                         Normal mesai ücreti: <span className="font-medium">x1.5</span>
                                                                         {formData.tatilVarMi && ' | Resmi tatil ücreti: x2.0'}
                                                                     </p>
-                                                                ) : Number(formData.toplamCalisma) < minCalisma && (
+                                                                ) : (
                                                                     <p className="text-xs mt-1 text-amber-600 dark:text-amber-400">
                                                                         <span className="font-medium">{formatSaat(minCalisma - Number(formData.toplamCalisma))} saat</span> eksik çalışmanız var
                                                                         <br />
@@ -413,7 +477,7 @@ export default function MaasHesaplamaForm() {
                         </div>
 
                         {/* Resmi Tatil */}
-                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 4 }}>
+                        <div className="animate-slide-in" style={{ ['--animation-order' as any]: 6 }}>
                             <div className="flex items-center gap-4">
                                 <div className="flex-1">
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -462,7 +526,7 @@ export default function MaasHesaplamaForm() {
 
                         {/* Tatil Mesai */}
                         {formData.tatilVarMi && (
-                            <div className="animate-slide-in-fast" style={{ ['--animation-order' as any]: 5 }}>
+                            <div className="animate-slide-in-fast" style={{ ['--animation-order' as any]: 7 }}>
                                 <div className="max-w-full">
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                                         {translations.form.holidayWork.hours.label}
@@ -507,7 +571,7 @@ export default function MaasHesaplamaForm() {
                         )}
 
                         {/* Hesapla ve Kaydet Butonları */}
-                        <div className="grid grid-cols-2 gap-4 pt-4 animate-slide-in" style={{ ['--animation-order' as any]: 6 }}>
+                        <div className="grid grid-cols-2 gap-4 pt-4 animate-slide-in" style={{ ['--animation-order' as any]: 8 }}>
                             <button
                                 type="submit"
                                 className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
@@ -679,7 +743,92 @@ export default function MaasHesaplamaForm() {
                 </div>
             )}
 
-            {/* Kaydetme Modalı */}
+            {/* Kayıtlı Hesaplamalar Modalı */}
+            {showHistoryModal && (
+                <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm">
+                    <div className="flex min-h-full items-center justify-center p-4">
+                        <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-2xl transition-all">
+                            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                                <div className="flex justify-between items-center">
+                                    <h2 className="text-2xl font-bold text-slate-800 dark:text-white">
+                                        Kayıtlı Hesaplamalar
+                                    </h2>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowHistoryModal(false)}
+                                        className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
+                                    >
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="p-6">
+                                {savedCalculations.length === 0 ? (
+                                    <div className="text-center py-8">
+                                        <p className="text-slate-500 dark:text-slate-400">Henüz kayıtlı hesaplama bulunmuyor.</p>
+                                        <div className="mt-4">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowHistoryModal(false)
+                                                    setShowSaveModal(true)
+                                                }}
+                                                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+                                            >
+                                                Yeni Hesaplama Kaydet
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        {savedCalculations.map((calculation, index) => (
+                                            <div key={index} className="p-4 bg-slate-50 dark:bg-slate-700/30 rounded-xl">
+                                                <div className="flex justify-between items-center">
+                                                    <div>
+                                                        <h3 className="font-medium text-slate-900 dark:text-white">
+                                                            {calculation.name}
+                                                        </h3>
+                                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                                            {translations.months[calculation.data.ay as keyof typeof translations.months]} {calculation.data.yil}
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => deleteCalculation(index)}
+                                                            className="p-1.5 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+                                                            title="Hesaplamayı Sil"
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                                            </svg>
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                loadCalculation(calculation.data)
+                                                                setShowHistoryModal(false)
+                                                            }}
+                                                            className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                                                        >
+                                                            Yükle
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Kayıtlı Hesaplamalar Modalı */}
             {showSaveModal && (
                 <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm">
                     <div className="flex min-h-full items-center justify-center p-4">
@@ -687,7 +836,7 @@ export default function MaasHesaplamaForm() {
                             <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
                                 <div className="flex justify-between items-center">
                                     <h2 className="text-2xl font-bold text-slate-800 dark:text-white">
-                                        {translations.history.empty}
+                                        Hesaplamayı Kaydet
                                     </h2>
                                     <button
                                         type="button"
@@ -702,83 +851,36 @@ export default function MaasHesaplamaForm() {
                             </div>
 
                             <div className="p-6">
-                                {calculationHistory.length === 0 ? (
-                                    <div className="text-center py-8">
-                                        <p className="text-slate-500 dark:text-slate-400">{translations.history.empty}</p>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                                            Hesaplama Adı
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={saveName}
+                                            onChange={(e) => setSaveName(e.target.value)}
+                                            className="block w-full px-4 py-2.5 text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300"
+                                            placeholder="Örn: Ocak 2024 Hesaplaması"
+                                        />
                                     </div>
-                                ) : (
-                                    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
-                                        {calculationHistory.map((item, index) => (
-                                            <div key={index} className="p-4 bg-slate-50 dark:bg-slate-700/30 rounded-xl">
-                                                <div className="flex justify-between items-start mb-3">
-                                                    <div>
-                                                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                                                            {item.date}
-                                                        </p>
-                                                        <p className="text-lg font-semibold text-slate-900 dark:text-white mt-1">
-                                                            {formatPara(item.sonuclar.netMaas)}
-                                                        </p>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => deleteHistoryCalculation(index)}
-                                                            className="p-1.5 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
-                                                            title="Hesaplamayı Sil"
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                            </svg>
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                setFormData(item.formData)
-                                                                setShowHistoryModal(false)
-                                                            }}
-                                                            className="px-3 py-1 text-sm bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 border border-indigo-600 dark:border-indigo-400 rounded-lg hover:bg-indigo-50 dark:hover:bg-slate-600"
-                                                        >
-                                                            Yeniden Hesapla
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                setFormData(item.formData)
-                                                                setSonuclar(item.sonuclar)
-                                                                setShowHistoryModal(false)
-                                                                setShowFromHistory(true)
-                                                                setShowModal(true)
-                                                            }}
-                                                            className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                                                        >
-                                                            Detayları Göster
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div className="grid grid-cols-3 gap-4 text-sm">
-                                                    <div>
-                                                        <p className="text-slate-500 dark:text-slate-400">{translations.results.baseSalary}</p>
-                                                        <p className="font-medium text-slate-900 dark:text-white">
-                                                            {formatPara(Number(item.formData.tabanMaas))}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-slate-500 dark:text-slate-400">{translations.history.period}</p>
-                                                        <p className="font-medium text-slate-900 dark:text-white">
-                                                            {translations.months[item.formData.ay as keyof typeof translations.months]} {item.formData.yil}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-slate-500 dark:text-slate-400">{translations.results.totalWork}</p>
-                                                        <p className="font-medium text-slate-900 dark:text-white">
-                                                            {item.formData.toplamCalisma} {translations.results.hours}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
+                                    <div className="flex justify-end gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowSaveModal(false)}
+                                            className="px-4 py-2 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+                                        >
+                                            İptal
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleSave}
+                                            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+                                        >
+                                            Kaydet
+                                        </button>
                                     </div>
-                                )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -790,108 +892,6 @@ export default function MaasHesaplamaForm() {
                 <div className="fixed bottom-4 right-4 z-50">
                     <div className="bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg animate-fade-in">
                         <p className="text-sm">{error}</p>
-                    </div>
-                </div>
-            )}
-
-            {/* Geçmiş Hesaplamalar Modalı */}
-            {showHistoryModal && (
-                <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm">
-                    <div className="flex min-h-full items-center justify-center p-4">
-                        <div className="relative w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 p-6 shadow-xl transition-all">
-                            <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-lg font-medium text-slate-900 dark:text-white">
-                                    {translations.history.title}
-                                </h3>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowHistoryModal(false)}
-                                    className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
-                                >
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                            
-                            {calculationHistory.length === 0 ? (
-                                <div className="text-center py-8">
-                                    <p className="text-slate-500 dark:text-slate-400">{translations.history.empty}</p>
-                                </div>
-                            ) : (
-                                <div className="space-y-4 max-h-[60vh] overflow-y-auto">
-                                    {calculationHistory.map((item, index) => (
-                                        <div key={index} className="p-4 bg-slate-50 dark:bg-slate-700/30 rounded-xl">
-                                            <div className="flex justify-between items-start mb-3">
-                                                <div>
-                                                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                                                        {item.date}
-                                                    </p>
-                                                    <p className="text-lg font-semibold text-slate-900 dark:text-white mt-1">
-                                                        {formatPara(item.sonuclar.netMaas)}
-                                                    </p>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => deleteHistoryCalculation(index)}
-                                                        className="p-1.5 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
-                                                        title="Hesaplamayı Sil"
-                                                    >
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                        </svg>
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setFormData(item.formData)
-                                                            setShowHistoryModal(false)
-                                                        }}
-                                                        className="px-3 py-1 text-sm bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 border border-indigo-600 dark:border-indigo-400 rounded-lg hover:bg-indigo-50 dark:hover:bg-slate-600"
-                                                    >
-                                                        Yeniden Hesapla
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setFormData(item.formData)
-                                                            setSonuclar(item.sonuclar)
-                                                            setShowHistoryModal(false)
-                                                            setShowFromHistory(true)
-                                                            setShowModal(true)
-                                                        }}
-                                                        className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-                                                    >
-                                                        Detayları Göster
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-4 text-sm">
-                                                <div>
-                                                    <p className="text-slate-500 dark:text-slate-400">{translations.results.baseSalary}</p>
-                                                    <p className="font-medium text-slate-900 dark:text-white">
-                                                        {formatPara(Number(item.formData.tabanMaas))}
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <p className="text-slate-500 dark:text-slate-400">{translations.history.period}</p>
-                                                    <p className="font-medium text-slate-900 dark:text-white">
-                                                        {translations.months[item.formData.ay as keyof typeof translations.months]} {item.formData.yil}
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <p className="text-slate-500 dark:text-slate-400">{translations.results.totalWork}</p>
-                                                    <p className="font-medium text-slate-900 dark:text-white">
-                                                        {item.formData.toplamCalisma} {translations.results.hours}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
                     </div>
                 </div>
             )}
